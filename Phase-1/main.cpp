@@ -7,6 +7,7 @@
 #include <queue>
 #include <functional>
 #include <thread>
+#include <chrono>
 
 struct CSRGraph {
     int num_vertices;
@@ -185,28 +186,36 @@ void RunTasksParallel(const CSRGraph& g, std::vector<QueryTask>& tasksSeq, int n
 
 int main() {
     CSRGraph graph = LoadGraph("soc-Slashdot0902.txt");
-
-    auto tasksSeq = LoadQueries("queries20.txt");
+    // auto tasksSeq = LoadQueries("queries20.txt");
+    // auto tasksPara = LoadQueries("queries20.txt");
+    auto tasksSeq = LoadQueries("queries10000.txt");
+    auto tasksPara = LoadQueries("queries10000.txt");
 
     RunTasksSequential(graph, tasksSeq);
-
     int correctSeq = 0;
     for (auto& t : tasksSeq) {
         if (t.result == t.expected) correctSeq++;
     }
-
     std::cout << "Sequential correct: " << correctSeq << "/" << tasksSeq.size() << std::endl;
 
-    auto tasksPara = LoadQueries("queries20.txt");
-
     RunTasksParallel(graph, tasksPara, 4);
-
     int correctPara = 0;
     for (auto& t : tasksPara) {
         if (t.result == t.expected) correctPara++;
     }
-
     std::cout << "Parallel correct: " << correctPara << "/" << tasksPara.size() << std::endl;
+
+    auto startSeq = std::chrono::high_resolution_clock::now();
+    RunTasksSequential(graph, tasksSeq);
+    auto endSeq = std::chrono::high_resolution_clock::now();
+    auto durationSeq = std::chrono::duration_cast<std::chrono::milliseconds>(endSeq - startSeq);
+    std::cout << "Sequential time: " << durationSeq.count() << " ms" << std::endl;
+
+    auto startPara = std::chrono::high_resolution_clock::now();
+    RunTasksParallel(graph, tasksPara, 4);
+    auto endPara = std::chrono::high_resolution_clock::now();
+    auto durationPara = std::chrono::duration_cast<std::chrono::milliseconds>(endPara - startPara);
+    std::cout << "Parallel time: " << durationPara.count() << " ms" << std::endl;
 
     return 0;
 }
