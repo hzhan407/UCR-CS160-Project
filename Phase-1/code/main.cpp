@@ -162,8 +162,8 @@ void RunTasksSequential(const CSRGraph& g, std::vector<QueryTask>& tasksSeq) {
     }
 }
 
-void RunTasksParallel(const CSRGraph& g, std::vector<QueryTask>& tasksSeq, int num_threads) {
-    int n = tasksSeq.size();
+void RunTasksParallel(const CSRGraph& g, std::vector<QueryTask>& tasksPara, int num_threads) {
+    int n = tasksPara.size();
     std::vector<std::thread> threads;
 
     auto worker = [&](int tid) {
@@ -171,7 +171,7 @@ void RunTasksParallel(const CSRGraph& g, std::vector<QueryTask>& tasksSeq, int n
         int end = n * (tid + 1) / num_threads;
 
         for(int i = start; i < end; ++i) {
-            tasksSeq[i].result = tasksSeq[i].cb(g, tasksSeq[i].src, tasksSeq[i].K);
+            tasksPara[i].result = tasksPara[i].cb(g, tasksPara[i].src, tasksPara[i].K);
         }
     };
 
