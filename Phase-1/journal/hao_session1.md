@@ -61,7 +61,7 @@ Task 18: result = 79426, expected = 79426 [OK]
 Task 19: result = 0, expected = 0 [OK]
 Correct: 20 / 20
 
-**Experiments/Analysis (if applicable)**:
+**Experiments/Analysis**:
 
 - I ran my system using the graph in "soc-Slashdot0902.txt" and tested the performance of my system using "queries20.txt" and "queries10000.txt". The results show that the speed of the concurrent version is faster than the speed of the sequential version. This is because multiple threads process query tasks concurrently.
 
